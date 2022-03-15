@@ -1,17 +1,20 @@
 import { PostData } from '../../hooks/usePosts';
 import { Empty, List } from 'antd';
 import PostListItem from '../post/PostListItem';
-import styles from './PostList.module.css';
-
+import styled from 'styled-components';
 type PostListProps = {
   data?: PostData[];
   isLoading: boolean;
 };
 
+const Wrapper = styled.section`
+  margin: 0 auto;
+`;
+
 const PostList = ({ data }: PostListProps) => {
   if (!data) return <Empty />;
   return (
-    <section className={styles.section}>
+    <Wrapper>
       <List
         itemLayout="vertical"
         size="small"
@@ -30,7 +33,7 @@ const PostList = ({ data }: PostListProps) => {
         dataSource={data}
         renderItem={(item) => <PostListItem key={item.title} post={item} />}
       />
-    </section>
+    </Wrapper>
   );
 };
 
