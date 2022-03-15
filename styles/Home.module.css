@@ -1,6 +1,6 @@
 .container {
   padding: 0 10rem;
-  width: 60%;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -30,5 +30,8 @@
   .container {
     width: 80%;
     padding: 0
+  }
+  .title {
+    font-size:2rem;
   }
 }

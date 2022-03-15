@@ -12,6 +12,7 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "antd": "^4.19.2",
+    "csstype": "^3.0.11",
     "moment": "^2.29.1",
     "next": "12.1.0",
     "react": "17.0.2",
