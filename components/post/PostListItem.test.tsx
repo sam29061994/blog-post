@@ -9,6 +9,23 @@ describe('PostListItemCard', () => {
     isLoading: false,
   };
 
+  beforeAll(() => {
+    //Mocking methods which are not implemented in JSDOM
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(), // Deprecated
+        removeListener: jest.fn(), // Deprecated
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    });
+  });
+
   afterEach(() => {
     cleanup();
   });
@@ -20,11 +37,9 @@ describe('PostListItemCard', () => {
     const time = screen.getByText(
       convertDateToTimeAgo(new Date(props.post.updatedAt))
     );
-    const image = screen.getByAltText('Author Image');
     expect(title).toBeVisible();
     expect(description).toBeVisible();
     expect(time).toBeVisible();
-    expect(image).toBeVisible();
   });
 
   test('loads placeholder skeloton during loading', () => {

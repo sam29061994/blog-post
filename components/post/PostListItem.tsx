@@ -1,6 +1,5 @@
 import { PostData } from '../../hooks/usePosts';
-import Image from 'next/image';
-import { List, Space, Tooltip, Skeleton } from 'antd';
+import { List, Space, Tooltip, Skeleton, Avatar } from 'antd';
 import { MessageOutlined, UserOutlined } from '@ant-design/icons';
 import { truncateString } from '../../util/string.util';
 import { convertDateToTimeAgo } from '../../util/date.util';
@@ -65,14 +64,7 @@ const PostListItem = ({ post, isLoading }: PostListItemProps) => {
       <Skeleton loading={isLoading} active avatar>
         <List.Item.Meta
           // Post Api Image Source Not Responding
-          avatar={
-            <Image
-              src="https://joeschmoe.io/api/v1/random"
-              alt="Author Image"
-              height="40px"
-              width="40px"
-            />
-          }
+          avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
           title={<a href={post.title}>{post.title}</a>}
           description={convertDateToTimeAgo(new Date(post.updatedAt))}
         />
