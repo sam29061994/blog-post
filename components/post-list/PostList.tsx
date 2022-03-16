@@ -1,42 +1,47 @@
-import { PostData } from '../../hooks/usePosts';
-import { Empty, List } from 'antd';
+import { useEffect } from 'react';
+import { usePosts, PostData } from '../../hooks/usePosts';
+import { Empty, List, message } from 'antd';
 import PostListItem from '../post/PostListItem';
+import { sortByRecentDate } from '../../util/date.util';
 import * as CSS from 'csstype';
-import styled from 'styled-components';
-type PostListProps = {
-  data?: PostData[];
-  isLoading: boolean;
-};
 
-const Wrapper = styled.section`
-  margin: 0 auto;
-`;
+export type PostListProps = {
+  pageSize: number;
+};
 
 const paginationStyle: CSS.Properties = {
   textAlign: 'left',
   padding: '10px 0',
-  position: 'fixed',
-  bottom: '90px',
 };
 
-const PostList = ({ data }: PostListProps) => {
+const PostList = ({ pageSize }: PostListProps) => {
+  const { data, isLoading, isError } = usePosts();
+
+  useEffect(() => {
+    if (isError) message.error('Error Fetching Posts');
+  }, [isError]);
+
+  const sortPosts = (first: PostData, second: PostData) =>
+    sortByRecentDate(new Date(first.updatedAt), new Date(second.updatedAt));
+
   if (!data) return <Empty />;
+
   return (
-    <Wrapper>
-      <List
-        itemLayout="vertical"
-        size="small"
-        pagination={{
-          pageSize: 5,
-          defaultPageSize: 5,
-          hideOnSinglePage: true,
-          position: 'bottom',
-          style: paginationStyle,
-        }}
-        dataSource={data}
-        renderItem={(item) => <PostListItem key={item.title} post={item} />}
-      />
-    </Wrapper>
+    <List
+      itemLayout="vertical"
+      size="small"
+      pagination={{
+        pageSize: pageSize,
+        defaultPageSize: 5,
+        hideOnSinglePage: true,
+        position: 'bottom',
+        style: paginationStyle,
+      }}
+      dataSource={data.sort(sortPosts)}
+      renderItem={(item) => (
+        <PostListItem key={item.title} post={item} isLoading={isLoading} />
+      )}
+    />
   );
 };
 

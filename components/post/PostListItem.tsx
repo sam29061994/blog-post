@@ -1,5 +1,6 @@
 import { PostData } from '../../hooks/usePosts';
-import { List, Avatar, Space, Tooltip } from 'antd';
+import Image from 'next/image';
+import { List, Space, Tooltip, Skeleton } from 'antd';
 import { MessageOutlined, UserOutlined } from '@ant-design/icons';
 import { truncateString } from '../../util/string.util';
 import { convertDateToTimeAgo } from '../../util/date.util';
@@ -17,14 +18,11 @@ const IconText = ({
   tooltipTitle?: string;
   tooltipPlacement?: TooltipPlacement;
 }) => {
-  const StyledIcon = styled(Icon)`
-    margin-right: 10px;
-  `;
   return (
     <Space>
       {tooltipTitle ? (
         <Tooltip title={tooltipTitle} placement={tooltipPlacement ?? 'top'}>
-          <StyledIcon />
+          <Icon style={{ marginRight: '10px' }} />
           {text}
         </Tooltip>
       ) : (
@@ -40,8 +38,11 @@ const IconText = ({
 const Wrapper = styled(List.Item)`
   padding: 10px 0;
 `;
-
-const PostListItem = ({ post }: { post: PostData }) => {
+export type PostListItemProps = {
+  post: PostData;
+  isLoading: boolean;
+};
+const PostListItem = ({ post, isLoading }: PostListItemProps) => {
   return (
     <Wrapper
       actions={[
@@ -61,12 +62,21 @@ const PostListItem = ({ post }: { post: PostData }) => {
         />,
       ]}
     >
-      <List.Item.Meta
-        // Post Api Image Source Not Responding
-        avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-        title={<a href={post.title}>{post.title}</a>}
-        description={convertDateToTimeAgo(new Date(post.updatedAt))}
-      />
+      <Skeleton loading={isLoading} active avatar>
+        <List.Item.Meta
+          // Post Api Image Source Not Responding
+          avatar={
+            <Image
+              src="https://joeschmoe.io/api/v1/random"
+              alt="Author Image"
+              height="40px"
+              width="40px"
+            />
+          }
+          title={<a href={post.title}>{post.title}</a>}
+          description={convertDateToTimeAgo(new Date(post.updatedAt))}
+        />
+      </Skeleton>
       {truncateString(post.description, 100)}
     </Wrapper>
   );
